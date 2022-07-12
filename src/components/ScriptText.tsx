@@ -1,9 +1,21 @@
-//TODO: BIND CONTROLS TO CREATE CARDS, CREATE CARDS ON STARTUP(need api setup for this in reality), ADD ADDITIONAL CONTROLS & MAP COLORS   
+//TODO: BIND CONTROLS TO CREATE CARDS the rest of cards, CREATE CARDS ON STARTUP(need api setup for this in reality)
 import React, { Component } from "react";
 import { red, orange, green, purple, blue } from "@mui/material/colors";
+import {store} from '../app/store'
 import PropTypes from "prop-types";
 import ElementItem from "./ElementItem";
 import Grid from "@mui/material/Grid";
+import {
+	Cast,
+	Extras,
+	Vehicles,
+	Props,
+	Costumes,
+	Makeup,
+	Sound,
+	Set,
+    Storyboard
+} from "./ElementTags";
 import FormatPaintIcon from "@mui/icons-material/FormatPaint";
 import "./ScriptText.css";
 import {
@@ -24,6 +36,15 @@ import {
 import { AnyObject } from "immer/dist/internal";
 
 export default class ScriptText extends Component<any, any> {
+	static propTypes = {
+        elements: PropTypes.arrayOf(PropTypes.shape({
+            id: PropTypes.number.isRequired,
+            elementType: PropTypes.bool.isRequired,
+            text: PropTypes.string.isRequired,
+            sceneNum: PropTypes.string.isRequired
+          }).isRequired).isRequired,
+		actions: PropTypes.object.isRequired,
+	};
 	rteObj: any;
 	rteSectionEle = null;
 	rteSectionRef;
@@ -49,45 +70,69 @@ export default class ScriptText extends Component<any, any> {
 		width: "auto",
 	};
 	private items: (string | IToolbarItems)[] = [
-		"SourceCode",
 		{
-			tooltipText: "Add Location",
+			tooltipText: "Add Cast",
 			template:
-				'<button class="e-tbar-btn e-btn" tabindex="-1" id="custom_tbar_loc"  ><div class="e-tbar-btn-text"><i class="material-icons " style="color:#d50000;">location_on</i></div></button>',
-			click: this.onCreate.bind(this, "loc"),
+				'<button class="e-tbar-btn e-btn" tabindex="-1" id="custom_tbar_cast"  ><div class="e-tbar-btn-text"><i class="material-icons " style="color:#2962FF;">person</i></div></button>',
+			click: this.onInsert.bind(this, "cast", "cast"),
+		},
+		{
+			tooltipText: "Add Extras",
+			template:
+				'<button class="e-tbar-btn e-btn" tabindex="-1" id="custom_tbar_extras"  ><div class="e-tbar-btn-text"><i class="material-icons " style="color:#00C853;">groups</i></div></button>',
+			click: this.onInsert.bind(this, "extras", "extras"),
 		},
 		{
 			tooltipText: "Add Vehicle",
 			template:
-				'<button class="e-tbar-btn e-btn" tabindex="-1" id="custom_tbar_vehc"  ><div class="e-tbar-btn-text"><i class="material-icons " style="color:#ff6d00;">directions_car</i></div></button>',
+				'<button class="e-tbar-btn e-btn" tabindex="-1" id="custom_tbar_vehc"  ><div class="e-tbar-btn-text"><i class="material-icons " style="color:#00B8D4;">directions_car</i></div></button>',
+			click: this.onInsert.bind(this, "vehicles", "vehicles"),
 		},
 		{
-			tooltipText: "Add Wardrobe",
+			tooltipText: "Add Props",
 			template:
-				'<button class="e-tbar-btn e-btn" tabindex="-1" id="custom_tbar_ward"  ><div class="e-tbar-btn-text"><i class="material-icons " style="color:#00c853;">checkroom</i></div></button>',
+				'<button class="e-tbar-btn e-btn" tabindex="-1" id="custom_tbar_props"  ><div class="e-tbar-btn-text"><i class="material-icons " style="color:#3E2723;">table_restaurant</i></div></button>',
+			click: this.onInsert.bind(this, "props", "props"),
 		},
 		{
-			tooltipText: "Add Cast",
+			tooltipText: "Add Costumes",
 			template:
-				'<button class="e-tbar-btn e-btn" tabindex="-1" id="custom_tbar_cast"  ><div class="e-tbar-btn-text"><i class="material-icons " style="color:#aa00ff;">person</i></div></button>',
+				'<button class="e-tbar-btn e-btn" tabindex="-1" id="custom_tbar_costume"  ><div class="e-tbar-btn-text"><i class="material-icons " style="color:#FF6D00;">checkroom</i></div></button>',
+			click: this.onInsert.bind(this, "costumes", "costumes"),
 		},
-		"|",
-		"Undo",
-		"Redo",
+		{
+			tooltipText: "Add Makeup",
+			template:
+				'<button class="e-tbar-btn e-btn" tabindex="-1" id="custom_tbar_makeup"  ><div class="e-tbar-btn-text"><i class="material-icons " style="color:#AA00FF;">brush</i></div></button>',
+			click: this.onInsert.bind(this, "makeup", "makeup"),
+		},
+		{
+			tooltipText: "Add Sound",
+			template:
+				'<button class="e-tbar-btn e-btn" tabindex="-1" id="custom_tbar_sound"  ><div class="e-tbar-btn-text"><i class="material-icons " style="color:#6200EA;">volume_up</i></div></button>',
+			click: this.onInsert.bind(this, "sound", "sound"),
+		},
+		{
+			tooltipText: "Add Set",
+			template:
+				'<button class="e-tbar-btn e-btn" tabindex="-1" id="custom_tbar_set"  ><div class="e-tbar-btn-text"><i class="material-icons " style="color:#64DD17;">location_on</i></div></button>',
+			click: this.onInsert.bind(this, "set", "set"),
+		},
+        {
+			tooltipText: "Add Storyboard",
+			template:
+				'<button class="e-tbar-btn e-btn" tabindex="-1" id="custom_tbar_set"  ><div class="e-tbar-btn-text"><i class="material-icons " style="color:#ffff00;">add_a_photo</i></div></button>',
+			click: this.onInsert.bind(this, "storyboard", "storyboard"),
+		},
 	];
 	toolbarSettings = {
 		items: this.items,
 	};
-	onCreate(stringy: string) {
-		this.customBtn = document.getElementById("custom_tbar_loc");
-		this.customBtn.onclick = (e: any) => {
-			this.rteObj.contentModule.getEditPanel().focus();
-			this.range = this.selection.getRange(document);
-			this.saveSelection = this.selection.save(this.range, document);
-			this.onInsert();
-		};
-	}
-	onInsert() {
+
+	onInsert(buttonType: string, idType: string) {
+		this.rteObj.contentModule.getEditPanel().focus();
+		this.range = this.selection.getRange(document);
+		this.saveSelection = this.selection.save(this.range, document);
 		if (this.rteObj.formatter.getUndoRedoStack().length === 0) {
 			this.rteObj.formatter.saveData();
 		}
@@ -148,37 +193,37 @@ export default class ScriptText extends Component<any, any> {
 			/[!"#$%&'()\*\+,\./:;<=>\?@\[\\\]^`{\|}~/\s ]+/g,
 			"-"
 		);
-		var stringbuilder = `<mark id="${className}-prop">${trimStr}</mark>`;
+		var stringbuilder = `<${buttonType} id="${className}-${idType}">${trimStr}</${buttonType}>`;
 		if (whtspcTr) stringbuilder += " ";
 		if (whtspcSt) stringbuilder = " " + stringbuilder;
 		console.log(className, stringbuilder);
 
 		var deleteClassName = this.rteObj
 			.getHtml()
-			.includes(`id="${className}-prop"`)
+			.includes(`id="${className}-${idType}"`)
 			? className
-			: this.rteObj.getHtml().includes(`id="${className2}-prop"`)
+			: this.rteObj.getHtml().includes(`id="${className2}-${idType}"`)
 			? className2
 			: null;
 		//console.log(this.rteObj.getSelection());
-		console.log(this.rteObj.getSelectedHtml().includes("<mark"));
+		console.log(this.rteObj.getSelectedHtml().includes(`<${buttonType}`));
 		if (
 			deleteClassName !== null &&
 			this.rangeCompareNode(
 				this.range,
-				this.rteObj.getContent().querySelector(`#${deleteClassName}-prop`)
+				this.rteObj.getContent().querySelector(`#${deleteClassName}-${idType}`)
 			) > 1
 		) {
 			console.log("delete");
 			//console.log(this.selection.baseNode.parentElement.className);
 			var pp = this.rteObj
 				.getContent()
-				.querySelector(`#${deleteClassName}-prop`);
+				.querySelector(`#${deleteClassName}-${idType}`);
 			var tt = pp.innerHTML;
 
 			var zz = this.rangeCompareNode(this.range, pp);
 			console.log(
-				"this.rteObj.getContent().querySelector(`#${deleteClassName}-prop`): "
+				"this.rteObj.getContent().querySelector(`#${deleteClassName}-${idType}`): "
 			);
 			console.log(pp);
 			console.log("this.rangeCompareNode(this.range,pp);: ");
@@ -191,6 +236,7 @@ export default class ScriptText extends Component<any, any> {
 			//if (whtspcTr) tt += ' ';
 			//if (whtspcSt) tt = ' ' + tt;
 			this.rteObj.executeCommand("insertHTML", `${tt}`);
+            this.props.actions.deleteElement(+pp.getAttribute("element-ID"));
 			z.normalize();
 		} else if (!selSingle) {
 			console.log("add");
@@ -201,16 +247,16 @@ export default class ScriptText extends Component<any, any> {
 			//   console.log(qc.item(i).id);
 			// }
 
-			if (qq.querySelector("mark") != null) {
-				console.log("add-mark");
+			if (qq.querySelector(buttonType) != null) {
+				console.log("add-elem");
 				//   var divi = document.createElement('div');
 				//   divi.innerHTML = this.rteObj.getSelectedHtml().trim();
 				console.log(
-					"qq.querySelectorAll(mark).length: " +
-						qq.querySelectorAll("mark").length
+					`qq.querySelectorAll(${buttonType}).length: ` +
+						qq.querySelectorAll(buttonType).length
 				);
-				while (qq.querySelectorAll("mark").length) {
-					var t = qq.querySelectorAll("mark").item(0);
+				while (qq.querySelectorAll(buttonType).length) {
+					var t = qq.querySelectorAll(buttonType).item(0);
 					console.log("t: " + t);
 					console.log("t.id: " + t.id);
 					var id = t.id;
@@ -221,17 +267,28 @@ export default class ScriptText extends Component<any, any> {
 					qq.removeChild(t);
 					qq.normalize();
 					//while()
-					//qq.querySelectorAll('mark').item(i).unwrap();
-					//qq.getElementsByTagName('mark').item(i).remove();
+					//qq.querySelectorAll('Cast').item(i).unwrap();
+					//qq.getElementsByTagName('Cast').item(i).remove();
 					//console.log("qq" + qq.getHtml());
 					// var pp = qq.querySelector(`#${id}`);
 					// pp.unwrap();
 					//pp.remove();
 				}
 			}
+
+            //CODE FOR ADDING A ELEMENT
+            console.log('Initial state: ', store.getState())
+			var addElem = this.props.actions.addCast(trimStr, 2); //WERE ADDING A CAST ELEM CARD HERE, we need to add support for all elements depending on buttonType
+            var addedId = store.getState().elements.at(-1)?.id ;
+            addedId ??= 0
+            console.log('State after dispatch: ', store.getState())
+
+            //CODE for displaying the correct color/bg-color
 			console.log(this.rteObj.getHtml());
-			var g = document.createElement("mark");
-			g.setAttribute("id", `${className}-prop`);
+			var g = document.createElement(buttonType);
+			g.setAttribute("id", `${className}-${idType}`);
+            g.setAttribute("element-ID",addedId?.toString());
+            g.setAttribute("scene-Num", addElem.sceneNum);
 			g.appendChild(qq);
 			g.normalize();
 			this.range.insertNode(g);
@@ -243,7 +300,7 @@ export default class ScriptText extends Component<any, any> {
 		);
 		//   this.rteObj.executeCommand(
 		//     'insertHTML',
-		//     `<mark>${this.rteObj.getSelectedHtml()}</mark>`
+		//     `<Cast>${this.rteObj.getSelectedHtml()}</Cast>`
 		//   );
 		this.selection.Clear(document);
 		this.rteObj.formatter.saveData();
@@ -285,9 +342,10 @@ export default class ScriptText extends Component<any, any> {
 										format={this.format}
 										fontFamily={this.fontFamily}
 									>
-										<div>
-											Hello sir this is how it works yaayaa how hello very dope
-										</div>
+										<h1>
+											Hello sir this is how it works
+											yaayaa how hello very dope
+										</h1>
 										<div>
 											Hello sir this is how it works yaayaa how hello very dope
 										</div>

@@ -3,7 +3,7 @@ import logo from "./logo.svg";
 import "./App.css";
 import { Box, Grid } from "@mui/material";
 import ElementMainSection from "./components/ElementMainSection";
-import ScriptText from "./components/ScriptText";
+import ScriptTextCont from "./containers/ScriptTextCont";
 
 function App() {
 	return (
@@ -57,7 +57,7 @@ function App() {
 		<Box sx={{ flexGrow: 1 }}>
 			<Grid container spacing={2}>
 				<Grid item xs={4}>
-					<ScriptText />
+					<ScriptTextCont />
 				</Grid>
 				<Grid item xs={8}>
 					<ElementMainSection />

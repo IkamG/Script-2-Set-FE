@@ -1,3 +1,4 @@
+//TODO: add missing element types
 import { createSelector } from "@reduxjs/toolkit";
 import * as elFilter from "../constants/ElementFilters";
 const getVisibilityFilter = (state: { visibilityFilter: any }) =>
@@ -10,8 +11,8 @@ export const getVisibleElements = createSelector(
 		switch (visibilityFilter) {
 			case elFilter.SHOW_ALL:
 				return elements.filter((t: { elementType: any }) => t.elementType !== "storyboard");
-			case elFilter.SHOW_LOCATION:
-				return elements.filter((t: { elementType: any }) => t.elementType === "location");
+			case elFilter.SHOW_SET:
+				return elements.filter((t: { elementType: any }) => t.elementType === "set");
 			case elFilter.SHOW_VEHICLE:
 				return elements.filter((t: { elementType: any }) => t.elementType === "vehicle");
 			case elFilter.SHOW_WARDROBE:

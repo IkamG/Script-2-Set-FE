@@ -7,6 +7,7 @@ import reportWebVitals from './reportWebVitals';
 import './index.css';
 import { registerLicense } from '@syncfusion/ej2-base';
 
+
 const container = document.getElementById('root')!;
 const root = createRoot(container);
 registerLicense('ORg4AjUWIQA/Gnt2VVhiQlFadVlJXGFWfVJpTGpQdk5xdV9DaVZUTWY/P1ZhSXxRdkJjXn1dcXRXQ2ZYUUY=')

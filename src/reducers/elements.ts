@@ -1,6 +1,6 @@
 import {
 	ADD_CAST,
-	ADD_LOCATION,
+	ADD_SET,
 	ADD_STORYBOARD,
 	ADD_VEHICLE,
 	ADD_WARDROBE,
@@ -15,6 +15,7 @@ const initalState = [
 		sceneNum: "0",
 	},
 ];
+
 export default function elements(state = initalState, action: any) {
 	switch (action.type) {
 		case ADD_CAST:
@@ -22,21 +23,21 @@ export default function elements(state = initalState, action: any) {
 				...state,
 				{
 					id:
-						state.reduce((maxId, element) => Math.max(element.id, maxId), -1) +
+						state.reduce((maxId, element) => Math.max((element.id === undefined) ? 0 : element.id, maxId), -1) +
 						1,
 					elementType: "cast",
 					text: action.text,
 					sceneNum: action.sceneNum,
 				},
 			];
-		case ADD_LOCATION:
+		case ADD_SET:
 			return [
 				...state,
 				{
 					id:
-						state.reduce((maxId, element) => Math.max(element.id, maxId), -1) +
+						state.reduce((maxId, element) => Math.max((element.id === undefined) ? 0 : element.id, maxId), -1) +
 						1,
-					elementType: "location",
+					elementType: "set",
 					text: action.text,
 					sceneNum: action.sceneNum,
 				},
@@ -46,7 +47,7 @@ export default function elements(state = initalState, action: any) {
 				...state,
 				{
 					id:
-						state.reduce((maxId, element) => Math.max(element.id, maxId), -1) +
+						state.reduce((maxId, element) => Math.max((element.id === undefined) ? 0 : element.id, maxId), -1) +
 						1,
 					elementType: "storyboard",
 					text: action.text,
@@ -58,7 +59,7 @@ export default function elements(state = initalState, action: any) {
 				...state,
 				{
 					id:
-						state.reduce((maxId, element) => Math.max(element.id, maxId), -1) +
+						state.reduce((maxId, element) => Math.max((element.id === undefined) ? 0 : element.id, maxId), -1) +
 						1,
 					elementType: "vehicle",
 					text: action.text,
@@ -70,7 +71,7 @@ export default function elements(state = initalState, action: any) {
 				...state,
 				{
 					id:
-						state.reduce((maxId, element) => Math.max(element.id, maxId), -1) +
+						state.reduce((maxId, element) => Math.max((element.id === undefined) ? 0 : element.id, maxId), -1) +
 						1,
 					elementType: "wardrobe",
 					text: action.text,

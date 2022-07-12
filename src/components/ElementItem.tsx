@@ -29,7 +29,7 @@ export default class ElementItem extends Component<any, any> {
 		}
 		this.setState({ editing: false });
 	};
-	locationTrue = this.state.elementType === "location" ? true : false;
+	locationTrue = this.state.elementType === "set" ? true : false;//deprecated here for an example
 	render() {
 		const { element, editElement, deleteElement, shopElement } = this.props;
 		let el;
@@ -51,7 +51,7 @@ export default class ElementItem extends Component<any, any> {
 						<Edit />
 					</IconButton>
 					{this.locationTrue ? (
-						//add Location control
+						//deprecated here for an example
 						<IconButton aria-label="location element" component="span"> 
 							<LocationOn />
 						</IconButton>

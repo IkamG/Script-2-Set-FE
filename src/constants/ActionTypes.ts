@@ -1,4 +1,5 @@
-export const ADD_LOCATION = 'ADD_LOCATION'
+//TODO: add missing element types
+export const ADD_SET = 'ADD_SET'
 export const ADD_VEHICLE = 'ADD_VEHICLE'
 export const ADD_WARDROBE = 'ADD_WARDROBE'
 export const ADD_CAST = 'ADD_CAST'

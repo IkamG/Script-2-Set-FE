@@ -1,3 +1,4 @@
+
 #rteInline .e-richtexteditor .e-rte-content .e-content {
     float: left;
     width: 100%;
@@ -8,4 +9,34 @@
     margin: 0;
     height: 400px;
     overflow: auto;
+}
+ /*all A700 unless specified */
+Cast{/*blue*/
+    color: #2962FF;
+}
+Extras{/*green*/
+    color: #00C853;
+}
+Vehicles{/*cyan;*/
+    color: #00B8D4;
+}
+Props{/*Brown 900;*/
+    color: #3E2723;
+}
+Costumes{/*orange;;*/
+    color: #FF6D00;
+}
+
+Makeup{/*purple*/
+    color: #AA00FF;
+}
+Sound{/*Deep purple*/
+    color: #6200EA;
+}
+Set{/*light green*/
+    color: #64DD17;
+}
+Storyboard{/*yellow A200 - we might want to change this*/
+    float: left;
+    background-color: #ffff00;
 }

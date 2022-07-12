@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import {
 	SHOW_ALL,
 	SHOW_CAST,
-	SHOW_LOCATION,
+	SHOW_SET,
 	SHOW_STORYBOARD,
 	SHOW_VEHICLE,
 	SHOW_WARDROBE,
@@ -13,7 +13,7 @@ import Grid from '@mui/material/Grid';
 
 const FILTER_TITLES : any = {
 	[SHOW_ALL]: 'all',
-	[SHOW_LOCATION]: 'location',
+	[SHOW_SET]: 'set',
 	[SHOW_VEHICLE]: 'vehicle',
 	[SHOW_WARDROBE]: 'wardrobe',
 	[SHOW_CAST]: 'cast',
